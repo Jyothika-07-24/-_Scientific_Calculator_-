@@ -74,8 +74,8 @@ function factorial(n) {
 // Plot graph
 function plotGraph() {
   const expr = display.value.trim();
-  if (!expr.includes("x")) {
-    alert("Please include 'x' (e.g., sin(x) or x^2)");
+  if (!/[xX]/.test(expr)) {
+    alert("Please include 'x' in your expression (e.g., sin(x) or x^2)");
     return;
   }
 
@@ -89,13 +89,16 @@ function plotGraph() {
 
   for (let x = -10; x <= 10; x += 0.1) {
     try {
-      let safeExpr = formatExpression(expr).replace(/\bx\b/g, `(${x})`);
+      let safeExpr = formatExpression(expr)
+        .replace(/\b[xX]\b/g, `(${x})`);
       let y = eval(safeExpr);
       if (isFinite(y)) {
         xValues.push(x.toFixed(2));
         yValues.push(y);
       }
-    } catch {}
+    } catch (err) {
+      console.error("Error at x =", x, err);
+    }
   }
 
   if (chart) chart.destroy();
@@ -109,7 +112,7 @@ function plotGraph() {
         data: yValues,
         borderColor: "#00ffcc",
         borderWidth: 2,
-        pointRadius: 0,
+        pointRadius: 0
       }],
     },
     options: {
@@ -121,6 +124,7 @@ function plotGraph() {
     },
   });
 }
+
 
 // History
 document.getElementById("historyBtn").addEventListener("click", () => {
