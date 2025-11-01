@@ -1,32 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Scientific Calculator</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
   <div class="calculator">
-    <div class="top-controls">
-      <button id="themeBtn" onclick="toggleTheme()">🌙</button>
-      <button onclick="openHistory()">📜 History</button>
-    </div>
+    <input type="text" id="display" readonly />
 
-    <input type="text" id="display" placeholder="0" onfocus="this.blur()" />
     <div class="controls">
-      <button onclick="clearDisplay()">C</button>
-      <button onclick="deleteLast()">⌫</button>
+      <button id="themeBtn" onclick="toggleTheme()">🌙</button>
       <button id="modeBtn" onclick="toggleDegRad()">DEG</button>
-      <button onclick="appendValue('+')">+</button>
+      <button id="sciBtn" onclick="toggleSciMode()">SCI OFF</button>
+      <button id="graphBtn" onclick="toggleGraph()">📈</button>
     </div>
 
     <div class="buttons">
+      <button onclick="appendValue('(')">(</button>
+      <button onclick="appendValue(')')">)</button>
+      <button onclick="appendValue('%')">%</button>
+      <button onclick="clearDisplay()">AC</button>
+
       <button onclick="appendValue('7')">7</button>
       <button onclick="appendValue('8')">8</button>
       <button onclick="appendValue('9')">9</button>
-      <button onclick="appendValue('-')">−</button>
+      <button onclick="appendValue('/')">÷</button>
 
       <button onclick="appendValue('4')">4</button>
       <button onclick="appendValue('5')">5</button>
@@ -36,35 +38,39 @@
       <button onclick="appendValue('1')">1</button>
       <button onclick="appendValue('2')">2</button>
       <button onclick="appendValue('3')">3</button>
-      <button onclick="appendValue('/')">÷</button>
+      <button onclick="appendValue('-')">−</button>
 
       <button onclick="appendValue('0')">0</button>
       <button onclick="appendValue('.')">.</button>
-      <button onclick="appendValue('(')">(</button>
-      <button onclick="appendValue(')')">)</button>
+      <button onclick="calculate()">=</button>
+      <button onclick="appendValue('+')">+</button>
 
       <button onclick="appendValue('sin(')">sin</button>
       <button onclick="appendValue('cos(')">cos</button>
       <button onclick="appendValue('tan(')">tan</button>
       <button onclick="appendValue('log(')">log</button>
 
-      <button onclick="appendValue('sqrt(')">√</button>
+      <button onclick="appendValue('√(')">√</button>
+      <button onclick="appendValue('∛(')">∛</button>
+      <button onclick="appendValue('π')">π</button>
       <button onclick="appendValue('^')">^</button>
-      <button onclick="appendValue('%')">%</button>
-      <button onclick="appendValue('pi')">π</button>
 
-      <button onclick="appendValue('e')">e</button>
-      <button onclick="calculate()">=</button>
-      <button id="sciBtn" onclick="toggleSciMode()">SCI OFF</button>
-      <button onclick="toggleGraph()">📈 Graph</button>
+      <button onclick="appendValue('!')">n!</button>
+      <button onclick="appendValue(',')">,</button>
+      <button onclick="deleteLast()">DEL</button>
+      <button onclick="openHistory()">🕘</button>
     </div>
 
-    <canvas id="graphCanvas" style="display:none; margin-top:10px;"></canvas>
+    <div id="graphContainer" class="graph-container hidden">
+      <canvas id="graphCanvas"></canvas>
+      <button id="closeGraph" onclick="toggleGraph()">Close Graph</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
