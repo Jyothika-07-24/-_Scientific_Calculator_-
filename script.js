@@ -1,119 +1,87 @@
-const display = document.getElementById("display");
-const buttons = document.querySelectorAll("button");
-const degToggle = document.getElementById("deg-toggle");
-const sciToggle = document.getElementById("sci-toggle");
-const themeToggle = document.getElementById("theme-toggle");
-const historyBtn = document.getElementById("history-btn");
-const historyPage = document.getElementById("history-page");
-const clearHistoryBtn = document.getElementById("clear-history");
-const backBtn = document.getElementById("back-btn");
-const historyList = document.getElementById("history-list");
-
-let isDegree = true;
 let sciMode = false;
-let history = JSON.parse(localStorage.getItem("calcHistory")) || [];
+let degMode = true;
+let darkTheme = localStorage.getItem("theme") !== "light";
 
-function updateDisplay(value) {
-  display.value += value;
+document.addEventListener("DOMContentLoaded", () => {
+  if (!darkTheme) document.body.classList.add("light-mode");
+  document.getElementById("themeBtn").innerText = darkTheme ? "🌙" : "☀️";
+});
+
+function appendValue(value) {
+  document.getElementById("display").value += value;
+}
+
+function clearDisplay() {
+  document.getElementById("display").value = "";
+}
+
+function deleteLast() {
+  let display = document.getElementById("display");
+  display.value = display.value.slice(0, -1);
+}
+
+function toggleDegRad() {
+  degMode = !degMode;
+  document.getElementById("modeBtn").innerText = degMode ? "DEG" : "RAD";
+}
+
+function toggleTheme() {
+  darkTheme = !darkTheme;
+  document.body.classList.toggle("light-mode", !darkTheme);
+  localStorage.setItem("theme", darkTheme ? "dark" : "light");
+  let themeBtn = document.getElementById("themeBtn");
+  themeBtn.innerText = darkTheme ? "🌙" : "☀️";
+  themeBtn.classList.add("glow");
+  setTimeout(() => themeBtn.classList.remove("glow"), 600);
+}
+
+function toggleSciMode() {
+  sciMode = !sciMode;
+  let btn = document.getElementById("sciBtn");
+  btn.innerText = sciMode ? "SCI ON" : "SCI OFF";
+  btn.classList.add("glow");
+  setTimeout(() => btn.classList.remove("glow"), 600);
 }
 
 function calculate() {
   try {
-    let expr = display.value
-      .replace(/÷/g, "/")
-      .replace(/×/g, "*")
-      .replace(/π/g, "Math.PI")
-      .replace(/e/g, "Math.E")
-      .replace(/√/g, "Math.sqrt")
-      .replace(/∛/g, "Math.cbrt")
-      .replace(/log/g, "Math.log10")
-      .replace(/sin/g, "Math.sin")
-      .replace(/cos/g, "Math.cos")
-      .replace(/tan/g, "Math.tan")
-      .replace(/\^/g, "**")
-      .replace(/!/g, (match, offset, string) => {
-        const num = parseFloat(string.slice(0, offset).match(/(\d+)(?!.*\d)/)[0]);
-        return factorial(num);
-      });
+    let expr = document.getElementById("display").value;
 
-    if (isDegree) expr = expr.replace(/Math\.sin\(([^)]*)\)/g, (_, a) => `Math.sin((${a}) * Math.PI / 180)`)
-                            .replace(/Math\.cos\(([^)]*)\)/g, (_, a) => `Math.cos((${a}) * Math.PI / 180)`)
-                            .replace(/Math\.tan\(([^)]*)\)/g, (_, a) => `Math.tan((${a}) * Math.PI / 180)`);
+    // Replace math functions
+    expr = expr.replace(/sin\(/g, "Math.sin(");
+    expr = expr.replace(/cos\(/g, "Math.cos(");
+    expr = expr.replace(/tan\(/g, "Math.tan(");
+    expr = expr.replace(/log\(/g, "Math.log10(");
+    expr = expr.replace(/sqrt\(/g, "Math.sqrt(");
+
+    // Degree conversion
+    if (degMode) {
+      expr = expr.replace(/Math\.sin\(([^)]+)\)/g, "Math.sin(($1)*Math.PI/180)");
+      expr = expr.replace(/Math\.cos\(([^)]+)\)/g, "Math.cos(($1)*Math.PI/180)");
+      expr = expr.replace(/Math\.tan\(([^)]+)\)/g, "Math.tan(($1)*Math.PI/180)");
+    }
 
     let result = eval(expr);
 
-    if (sciMode) result = result.toExponential(6);
-    display.value = result;
-    history.push(`${display.value} = ${result}`);
-    localStorage.setItem("calcHistory", JSON.stringify(history));
-    updateHistoryList();
+    // Handle SCI mode
+    if (sciMode) result = Number(result).toExponential(5);
 
-  } catch (e) {
-    display.value = "Error";
+    document.getElementById("display").value = result;
+    saveToHistory(expr, result);
+  } catch {
+    document.getElementById("display").value = "Error";
   }
 }
 
-function factorial(n) {
-  if (n === 0 || n === 1) return 1;
-  return n * factorial(n - 1);
+function saveToHistory(expression, result) {
+  let history = JSON.parse(localStorage.getItem("calcHistory")) || [];
+  history.push({ expression, result, time: new Date().toLocaleString() });
+  localStorage.setItem("calcHistory", JSON.stringify(history));
 }
 
-function updateHistoryList() {
-  historyList.innerHTML = "";
-  history.forEach((entry) => {
-    const li = document.createElement("li");
-    li.textContent = entry;
-    historyList.appendChild(li);
-  });
+function openHistory() {
+  window.location.href = "history.html";
 }
 
-// Button actions
-buttons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const val = btn.textContent;
-    if (val === "=") calculate();
-    else if (val === "C") display.value = "";
-    else if (val === "⌫") display.value = display.value.slice(0, -1);
-    else if (val === "DEG") {
-      isDegree = !isDegree;
-      degToggle.textContent = isDegree ? "DEG" : "RAD";
-    } else if (val === "SCI OFF" || val === "SCI ON") {
-      sciMode = !sciMode;
-      sciToggle.textContent = sciMode ? "SCI ON" : "SCI OFF";
-    } else if (!btn.id) {
-      updateDisplay(val);
-    }
-  });
-});
-
-// Theme toggle
-themeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  localStorage.setItem("theme", document.body.classList.contains("dark-mode"));
-});
-
-// Load saved theme
-if (localStorage.getItem("theme") === "true") {
-  document.body.classList.add("dark-mode");
-}
-
-// History view
-historyBtn.addEventListener("click", () => {
-  document.querySelector(".calculator").classList.add("hidden");
-  historyPage.classList.remove("hidden");
-});
-
-backBtn.addEventListener("click", () => {
-  historyPage.classList.add("hidden");
-  document.querySelector(".calculator").classList.remove("hidden");
-});
-
-clearHistoryBtn.addEventListener("click", () => {
-  history = [];
-  localStorage.removeItem("calcHistory");
-  updateHistoryList();
-});
-
-updateHistoryList();
 
 
