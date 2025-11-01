@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>History</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="calculator">
-    <h2>🕘 Calculation History</h2>
-    <ul id="history-list"></ul>
-    <button class="btn fn" onclick="clearHistory()">🧹 Clear History</button>
-    <button class="btn fn" onclick="window.location.href='index.html'">🔙 Back</button>
+    <h2>📜 Calculation History</h2>
+    <ul id="historyList"></ul>
+    <div class="controls">
+      <button onclick="clearHistory()">🧹 Clear</button>
+      <button onclick="goBack()">🔙 Back</button>
+    </div>
   </div>
 
-  <script>
-    const list = document.getElementById("history-list");
-    const history = JSON.parse(localStorage.getItem("calcHistory")) || [];
-    list.innerHTML = history.map(h => `<li>${h}</li>`).join("");
-
-    function clearHistory() {
-      localStorage.removeItem("calcHistory");
-      list.innerHTML = "";
-    }
-  </script>
+  <script src="history.js"></script>
 </body>
 </html>
+
