@@ -1,69 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scientific Calculator</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scientific Calculator</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="calculator">
-    <div class="top-bar">
-      <button id="theme-btn">🌙</button>
-      <button id="history-btn" onclick="openHistory()">🕘 History</button>
+    <div class="calculator">
+        <div class="top-bar">
+            <button id="theme-toggle">🌙</button>
+            <button id="history-btn">📜 History</button>
+        </div>
+
+        <input type="text" id="display" disabled />
+
+        <div class="buttons">
+            <button>C</button>
+            <button>⌫</button>
+            <button id="deg-toggle">DEG</button>
+            <button>+</button>
+
+            <button>7</button><button>8</button><button>9</button><button>−</button>
+            <button>4</button><button>5</button><button>6</button><button>×</button>
+            <button>1</button><button>2</button><button>3</button><button>÷</button>
+            <button>0</button><button>.</button><button>=</button><button>(</button>
+            <button>)</button>
+
+            <button>sin</button><button>cos</button><button>tan</button><button>log</button>
+            <button>√</button><button>∛</button><button>π</button><button>e</button>
+            <button>^</button><button>!</button><button>%</button>
+
+            <button id="sci-toggle">SCI OFF</button>
+            <button id="graph-btn">📈 Graph</button>
+        </div>
     </div>
 
-    <input type="text" id="display" readonly />
-
-    <div class="buttons">
-      <button class="btn fn" onclick="clearDisplay()">C</button>
-      <button class="btn fn" onclick="backspace()">⌫</button>
-      <button class="btn fn" onclick="toggleDegRad()">DEG</button>
-      <button class="btn op" onclick="appendOperator('/')">÷</button>
-
-      <button class="btn num" onclick="appendValue('7')">7</button>
-      <button class="btn num" onclick="appendValue('8')">8</button>
-      <button class="btn num" onclick="appendValue('9')">9</button>
-      <button class="btn op" onclick="appendOperator('*')">×</button>
-
-      <button class="btn num" onclick="appendValue('4')">4</button>
-      <button class="btn num" onclick="appendValue('5')">5</button>
-      <button class="btn num" onclick="appendValue('6')">6</button>
-      <button class="btn op" onclick="appendOperator('-')">−</button>
-
-      <button class="btn num" onclick="appendValue('1')">1</button>
-      <button class="btn num" onclick="appendValue('2')">2</button>
-      <button class="btn num" onclick="appendValue('3')">3</button>
-      <button class="btn op" onclick="appendOperator('+')">+</button>
-
-      <button class="btn num" onclick="appendValue('0')">0</button>
-      <button class="btn num" onclick="appendValue('.')">.</button>
-      <button class="btn fn" onclick="calculate()">=</button>
-
-      <button class="btn fn" onclick="appendFunc('sin(')">sin</button>
-      <button class="btn fn" onclick="appendFunc('cos(')">cos</button>
-      <button class="btn fn" onclick="appendFunc('tan(')">tan</button>
-      <button class="btn fn" onclick="appendFunc('log(')">log</button>
-
-      <button class="btn fn" onclick="appendFunc('sqrt(')">√</button>
-      <button class="btn fn" onclick="appendFunc('Math.pow(')">xʸ</button>
-      <button class="btn fn" onclick="appendValue('Math.PI')">π</button>
-      <button class="btn fn" onclick="appendValue('Math.E')">e</button>
-
-      <button class="btn fn" onclick="appendFunc('factorial(')">x!</button>
-      <button class="btn fn" onclick="appendFunc('Math.cbrt(')">∛</button>
-      <button class="btn fn" onclick="appendOperator('%')">%</button>
-      <button class="btn fn" onclick="toggleSci()">SCI</button>
-
-      <button class="btn fn" onclick="plotGraph()">📈 Graph</button>
+    <!-- History Page -->
+    <div id="history-page" class="hidden">
+        <h2>🧾 Calculation History</h2>
+        <ul id="history-list"></ul>
+        <button id="clear-history">Clear History</button>
+        <button id="back-btn">↩️ Back to Calculator</button>
     </div>
 
-    <canvas id="graphCanvas" width="350" height="200"></canvas>
-  </div>
-
-  <audio id="clickSound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_9f497f7495.mp3"></audio>
-  <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
+
 
