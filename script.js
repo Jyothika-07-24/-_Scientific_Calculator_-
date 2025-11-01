@@ -61,23 +61,16 @@ function backToCalc() {
   document.getElementById("graphContainer").classList.add("hidden");
 }
 
-// Calculate expression
+// Factorial
+function factorial(n) {
+  if (n === 0 || n === 1) return 1;
+  return n * factorial(n - 1);
+}
+
+// Evaluate the expression safely
 function calculate() {
   try {
-    let expression = display.value
-      .replace(/÷/g, "/")
-      .replace(/×/g, "*")
-      .replace(/π/g, "Math.PI")
-      .replace(/e/g, "Math.E")
-      .replace(/√\(/g, "Math.sqrt(")
-      .replace(/∛\(/g, "Math.cbrt(")
-      .replace(/log\(/g, "Math.log10(")
-      .replace(/sin\(/g, `Math.sin(${mode === "DEG" ? "Math.PI/180*" : ""}`)
-      .replace(/cos\(/g, `Math.cos(${mode === "DEG" ? "Math.PI/180*" : ""}`)
-      .replace(/tan\(/g, `Math.tan(${mode === "DEG" ? "Math.PI/180*" : ""}`)
-      .replace(/(\d+)!/g, (_, n) => factorial(parseInt(n)))
-      .replace(/%/g, "/100");
-
+    let expression = formatExpression(display.value);
     let result = eval(expression);
     if (sciMode) result = result.toExponential(6);
 
@@ -89,9 +82,22 @@ function calculate() {
   }
 }
 
-function factorial(n) {
-  if (n === 0 || n === 1) return 1;
-  return n * factorial(n - 1);
+// Format expression into valid JS syntax
+function formatExpression(expr) {
+  return expr
+    .replace(/÷/g, "/")
+    .replace(/×/g, "*")
+    .replace(/π/g, "Math.PI")
+    .replace(/e/g, "Math.E")
+    .replace(/√\(/g, "Math.sqrt(")
+    .replace(/∛\(/g, "Math.cbrt(")
+    .replace(/log\(/g, "Math.log10(")
+    .replace(/sin\(/g, `Math.sin(${mode === "DEG" ? "Math.PI/180*" : ""}`)
+    .replace(/cos\(/g, `Math.cos(${mode === "DEG" ? "Math.PI/180*" : ""}`)
+    .replace(/tan\(/g, `Math.tan(${mode === "DEG" ? "Math.PI/180*" : ""}`)
+    .replace(/(\d+)!/g, (_, n) => factorial(parseInt(n)))
+    .replace(/%/g, "/100")
+    .replace(/\^/g, "**"); // FIX: proper power operator
 }
 
 // Load history
@@ -114,7 +120,7 @@ function clearHistory() {
 
 // Plot graph
 function plotGraph() {
-  const expr = display.value;
+  const expr = display.value.trim();
   if (!expr.includes("x")) {
     alert("Please include 'x' in your expression (e.g., sin(x) or x^2)");
     return;
@@ -129,23 +135,11 @@ function plotGraph() {
   const yValues = [];
 
   for (let x = -10; x <= 10; x += 0.1) {
-    let safeExpr = expr
-      .replace(/÷/g, "/")
-      .replace(/×/g, "*")
-      .replace(/π/g, "Math.PI")
-      .replace(/e/g, "Math.E")
-      .replace(/√\(/g, "Math.sqrt(")
-      .replace(/∛\(/g, "Math.cbrt(")
-      .replace(/log\(/g, "Math.log10(")
-      .replace(/sin\(/g, `Math.sin(${mode === "DEG" ? "Math.PI/180*" : ""}`)
-      .replace(/cos\(/g, `Math.cos(${mode === "DEG" ? "Math.PI/180*" : ""}`)
-      .replace(/tan\(/g, `Math.tan(${mode === "DEG" ? "Math.PI/180*" : ""}`)
-      .replace(/\^/g, "**");
-
     try {
-      let y = eval(safeExpr.replace(/x/g, `(${x})`));
+      let safeExpr = formatExpression(expr).replace(/\bx\b/g, `(${x})`);
+      let y = eval(safeExpr);
       if (isFinite(y)) {
-        xValues.push(x);
+        xValues.push(x.toFixed(2));
         yValues.push(y);
       }
     } catch {}
@@ -164,6 +158,7 @@ function plotGraph() {
           borderColor: "#00ffcc",
           borderWidth: 2,
           pointRadius: 0,
+          tension: 0.1
         },
       ],
     },
@@ -176,4 +171,5 @@ function plotGraph() {
     },
   });
 }
+
 
