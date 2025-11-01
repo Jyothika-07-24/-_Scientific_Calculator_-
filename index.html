@@ -1,84 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Scientific Calculator</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="calculator">
-    <div class="top-bar">
-      <button id="themeToggle">🌙</button>
-      <button id="historyBtn">📜 History</button>
-    </div>
-
-    <input type="text" id="display" readonly />
+    <input type="text" id="display" placeholder="0" readonly>
 
     <div class="controls">
-      <button onclick="clearDisplay()">C</button>
-      <button onclick="deleteLast()">⌫</button>
-      <button onclick="toggleDegRad()" id="modeBtn">DEG</button>
-      <button onclick="appendSymbol('+')">+</button>
+      <button id="themeToggle">🌗</button>
+      <button id="modeBtn" onclick="toggleDegRad()">DEG</button>
+      <button id="sciBtn" onclick="toggleSci()">SCI OFF</button>
+      <button id="historyBtn">📜</button>
     </div>
 
     <div class="buttons">
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="deleteLast()">⌫</button>
+      <button onclick="appendSymbol('(')">(</button>
+      <button onclick="appendSymbol(')')">)</button>
+
       <button onclick="appendSymbol('7')">7</button>
       <button onclick="appendSymbol('8')">8</button>
       <button onclick="appendSymbol('9')">9</button>
-      <button onclick="appendSymbol('-')">-</button>
+      <button onclick="appendSymbol('/')">÷</button>
 
       <button onclick="appendSymbol('4')">4</button>
       <button onclick="appendSymbol('5')">5</button>
       <button onclick="appendSymbol('6')">6</button>
-      <button onclick="appendSymbol('×')">×</button>
+      <button onclick="appendSymbol('*')">×</button>
 
       <button onclick="appendSymbol('1')">1</button>
       <button onclick="appendSymbol('2')">2</button>
       <button onclick="appendSymbol('3')">3</button>
-      <button onclick="appendSymbol('÷')">÷</button>
+      <button onclick="appendSymbol('-')">−</button>
 
       <button onclick="appendSymbol('0')">0</button>
       <button onclick="appendSymbol('.')">.</button>
       <button onclick="calculate()">=</button>
-      <button onclick="appendSymbol('(')">(</button>
+      <button onclick="appendSymbol('+')">+</button>
 
-      <button onclick="appendSymbol(')')">)</button>
       <button onclick="appendSymbol('sin(')">sin</button>
       <button onclick="appendSymbol('cos(')">cos</button>
       <button onclick="appendSymbol('tan(')">tan</button>
+      <button onclick="appendSymbol('^')">xʸ</button>
 
-      <button onclick="appendSymbol('log(')">log</button>
       <button onclick="appendSymbol('√(')">√</button>
       <button onclick="appendSymbol('∛(')">∛</button>
       <button onclick="appendSymbol('π')">π</button>
-
-      <button onclick="appendSymbol('e')">e</button>
-      <button onclick="appendSymbol('^')">^</button>
-      <button onclick="appendSymbol('!')">!</button>
       <button onclick="appendSymbol('%')">%</button>
 
-      <button id="sciBtn" onclick="toggleSci()">SCI OFF</button>
-      <button id="graphBtn" onclick="plotGraph()">📈 Graph</button>
+      <button onclick="appendSymbol('x')">x</button>
+      <button onclick="plotGraph()">📈</button>
     </div>
 
-    <div class="graph-container hidden" id="graphContainer">
+    <div id="graphContainer" class="hidden">
       <canvas id="graphCanvas"></canvas>
-      <button onclick="backToCalc()">⬅ Back to Calculator</button>
+      <button onclick="backToCalc()">⬅ Back</button>
     </div>
 
-    <div class="history-container hidden" id="historyContainer">
-      <h2>📜 Calculation History</h2>
+    <div id="historyContainer" class="hidden">
+      <h2>📜 History</h2>
       <ul id="historyList"></ul>
-      <button onclick="clearHistory()">Clear History</button>
-      <button onclick="backToCalc()">⬅ Back to Calculator</button>
+      <button onclick="clearHistory()">Clear</button>
+      <button onclick="backToCalc()">⬅ Back</button>
     </div>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
