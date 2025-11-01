@@ -1,0 +1,109 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: var(--bg);
+    transition: background 0.3s ease;
+}
+
+:root {
+    --bg: #f1f1f1;
+    --text: #000;
+    --btn-bg: #fff;
+    --btn-hover: #ddd;
+    --op-bg: #ff9500;
+    --op-text: #fff;
+}
+
+.dark {
+    --bg: #1e1e1e;
+    --text: #fff;
+    --btn-bg: #333;
+    --btn-hover: #444;
+    --op-bg: #ff9500;
+    --op-text: #000;
+}
+
+.calculator {
+    width: 350px;
+    padding: 20px;
+    border-radius: 20px;
+    background: var(--btn-bg);
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+}
+
+#display {
+    width: 100%;
+    height: 60px;
+    font-size: 24px;
+    text-align: right;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    padding: 10px;
+    color: var(--text);
+    background: var(--bg);
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn {
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    background: var(--btn-bg);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn:hover {
+    background: var(--btn-hover);
+}
+
+.op {
+    background: var(--op-bg);
+    color: var(--op-text);
+}
+
+.theme-toggle {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#theme-btn {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.history {
+    margin-top: 20px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.history h3 {
+    margin-bottom: 5px;
+    color: var(--text);
+}
+
+.history ul {
+    list-style: none;
+    padding: 0;
+    color: var(--text);
+}
+
+.history li {
+    border-bottom: 1px solid var(--btn-hover);
+    padding: 3px 0;
+}
