@@ -33,24 +33,26 @@ function factorial(n) {
 
 function calculate() {
   try {
-    let expr = display.value.replace(/sin|cos|tan|log|sqrt|factorial|cbrt/g, match => ({
-      sin: isDegree ? "Math.sin(Math.PI/180*" : "Math.sin(",
-      cos: isDegree ? "Math.cos(Math.PI/180*" : "Math.cos(",
-      tan: isDegree ? "Math.tan(Math.PI/180*" : "Math.tan(",
-      log: "Math.log10(",
-      sqrt: "Math.sqrt(",
-      cbrt: "Math.cbrt(",
-      factorial: "factorial("
-    }[match]));
+    let expression = document.getElementById("display").value;
 
-    let result = eval(expr);
-    if (isScientific) result = result.toExponential(4);
-    if (!isFinite(result)) throw "Error";
+    // ✅ Replace math functions with JS Math equivalents
+    expression = expression
+      .replace(/sin\(/g, "Math.sin(Math.PI/180*")  // degree mode by default
+      .replace(/cos\(/g, "Math.cos(Math.PI/180*")
+      .replace(/tan\(/g, "Math.tan(Math.PI/180*")
+      .replace(/asin\(/g, "Math.asin(")
+      .replace(/acos\(/g, "Math.acos(")
+      .replace(/atan\(/g, "Math.atan(")
+      .replace(/log\(/g, "Math.log10(")
+      .replace(/ln\(/g, "Math.log(")
+      .replace(/√/g, "Math.sqrt")
+      .replace(/\^/g, "**");  // support for power operator (^)
 
-    saveToHistory(display.value + " = " + result);
-    display.value = result;
-  } catch {
-    display.value = "Error";
+    // ✅ Evaluate and show the result
+    let result = eval(expression);
+    document.getElementById("display").value = result;
+  } catch (error) {
+    document.getElementById("display").value = "Error";
   }
 }
 
