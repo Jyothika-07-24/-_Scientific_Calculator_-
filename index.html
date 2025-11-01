@@ -1,243 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Scientific Calculator</title>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #141E30, #243B55);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      transition: background 0.4s ease;
-    }
-
-    .calculator {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 25px;
-      border-radius: 20px;
-      width: 330px;
-      text-align: center;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(8px);
-    }
-
-    input {
-      width: 100%;
-      height: 60px;
-      font-size: 1.3em;
-      border: none;
-      outline: none;
-      margin-bottom: 15px;
-      border-radius: 10px;
-      padding: 10px;
-      text-align: right;
-      background: #1b2838;
-      color: #00ffcc;
-    }
-
-    .controls, .buttons {
-      display: grid;
-      gap: 8px;
-    }
-
-    .controls {
-      grid-template-columns: repeat(4, 1fr);
-      margin-bottom: 10px;
-    }
-
-    .buttons {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    button {
-      padding: 12px;
-      font-size: 1.1em;
-      border: none;
-      border-radius: 10px;
-      background: #333;
-      color: #fff;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-      background: #00ffcc;
-      color: #000;
-    }
-
-    .light-mode {
-      background: linear-gradient(135deg, #dfe9f3, #ffffff);
-      color: #000;
-    }
-
-    .light-mode input {
-      background: #f0f0f0;
-      color: #000;
-    }
-
-    .light-mode button {
-      background: #ddd;
-      color: #000;
-    }
-
-    /* =====================
-       GRAPH SECTION
-    ===================== */
-    .graph-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-top: 20px;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 15px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    #graphCanvas {
-      width: 100%;
-      max-width: 450px;
-      height: 300px;
-      background-color: white;
-      border-radius: 8px;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scientific Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="calculator">
-    <input type="text" id="display" readonly>
+    <div class="top-bar">
+      <button id="themeToggle">🌙</button>
+      <button id="historyBtn">📜 History</button>
+    </div>
+
+    <input type="text" id="display" readonly />
+
     <div class="controls">
       <button onclick="clearDisplay()">C</button>
-      <button onclick="deleteChar()">DEL</button>
-      <button onclick="toggleMode()">☀️/🌙</button>
-      <button onclick="calculate()">=</button>
+      <button onclick="deleteLast()">⌫</button>
+      <button onclick="toggleDegRad()" id="modeBtn">DEG</button>
+      <button onclick="appendSymbol('+')">+</button>
     </div>
+
     <div class="buttons">
-      <button onclick="appendValue('7')">7</button>
-      <button onclick="appendValue('8')">8</button>
-      <button onclick="appendValue('9')">9</button>
-      <button onclick="appendValue('/')">÷</button>
+      <button onclick="appendSymbol('7')">7</button>
+      <button onclick="appendSymbol('8')">8</button>
+      <button onclick="appendSymbol('9')">9</button>
+      <button onclick="appendSymbol('-')">-</button>
 
-      <button onclick="appendValue('4')">4</button>
-      <button onclick="appendValue('5')">5</button>
-      <button onclick="appendValue('6')">6</button>
-      <button onclick="appendValue('*')">×</button>
+      <button onclick="appendSymbol('4')">4</button>
+      <button onclick="appendSymbol('5')">5</button>
+      <button onclick="appendSymbol('6')">6</button>
+      <button onclick="appendSymbol('×')">×</button>
 
-      <button onclick="appendValue('1')">1</button>
-      <button onclick="appendValue('2')">2</button>
-      <button onclick="appendValue('3')">3</button>
-      <button onclick="appendValue('-')">−</button>
+      <button onclick="appendSymbol('1')">1</button>
+      <button onclick="appendSymbol('2')">2</button>
+      <button onclick="appendSymbol('3')">3</button>
+      <button onclick="appendSymbol('÷')">÷</button>
 
-      <button onclick="appendValue('0')">0</button>
-      <button onclick="appendValue('.')">.</button>
-      <button onclick="appendValue('+')">+</button>
-      <button onclick="appendValue('^')">^</button>
+      <button onclick="appendSymbol('0')">0</button>
+      <button onclick="appendSymbol('.')">.</button>
+      <button onclick="calculate()">=</button>
+      <button onclick="appendSymbol('(')">(</button>
 
-      <button onclick="appendValue('sin(')">sin</button>
-      <button onclick="appendValue('cos(')">cos</button>
-      <button onclick="appendValue('tan(')">tan</button>
-      <button onclick="appendValue('sqrt(')">√</button>
+      <button onclick="appendSymbol(')')">)</button>
+      <button onclick="appendSymbol('sin(')">sin</button>
+      <button onclick="appendSymbol('cos(')">cos</button>
+      <button onclick="appendSymbol('tan(')">tan</button>
+
+      <button onclick="appendSymbol('log(')">log</button>
+      <button onclick="appendSymbol('√(')">√</button>
+      <button onclick="appendSymbol('∛(')">∛</button>
+      <button onclick="appendSymbol('π')">π</button>
+
+      <button onclick="appendSymbol('e')">e</button>
+      <button onclick="appendSymbol('^')">^</button>
+      <button onclick="appendSymbol('!')">!</button>
+      <button onclick="appendSymbol('%')">%</button>
+
+      <button id="sciBtn" onclick="toggleSci()">SCI OFF</button>
+      <button id="graphBtn" onclick="plotGraph()">📈 Graph</button>
     </div>
 
-    <!-- Graph Section -->
     <div class="graph-container hidden" id="graphContainer">
       <canvas id="graphCanvas"></canvas>
+      <button onclick="backToCalc()">⬅ Back to Calculator</button>
+    </div>
+
+    <div class="history-container hidden" id="historyContainer">
+      <h2>📜 Calculation History</h2>
+      <ul id="historyList"></ul>
+      <button onclick="clearHistory()">Clear History</button>
+      <button onclick="backToCalc()">⬅ Back to Calculator</button>
     </div>
   </div>
 
-  <script>
-    const display = document.getElementById("display");
-    const graphContainer = document.getElementById("graphContainer");
-    const canvas = document.getElementById("graphCanvas");
-    const ctx = canvas.getContext("2d");
-
-    let isLightMode = false;
-
-    function appendValue(value) {
-      display.value += value;
-    }
-
-    function clearDisplay() {
-      display.value = "";
-      graphContainer.classList.add("hidden");
-    }
-
-    function deleteChar() {
-      display.value = display.value.slice(0, -1);
-    }
-
-    function toggleMode() {
-      isLightMode = !isLightMode;
-      document.body.classList.toggle("light-mode", isLightMode);
-    }
-
-    function calculate() {
-      try {
-        let expression = display.value
-          .replace(/sin/g, "Math.sin")
-          .replace(/cos/g, "Math.cos")
-          .replace(/tan/g, "Math.tan")
-          .replace(/sqrt/g, "Math.sqrt")
-          .replace(/\^/g, "**");
-
-        let result = eval(expression);
-        display.value = result;
-        plotGraph(expression);
-      } catch (error) {
-        display.value = "Error";
-      }
-    }
-
-    function plotGraph(expression) {
-      graphContainer.classList.remove("hidden");
-
-      const width = canvas.width = 400;
-      const height = canvas.height = 300;
-
-      ctx.clearRect(0, 0, width, height);
-
-      ctx.beginPath();
-      ctx.moveTo(0, height / 2);
-      ctx.lineTo(width, height / 2);
-      ctx.moveTo(width / 2, 0);
-      ctx.lineTo(width / 2, height);
-      ctx.strokeStyle = "#000";
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.strokeStyle = "#ff007f";
-
-      for (let x = -10; x <= 10; x += 0.1) {
-        let y;
-        try {
-          y = eval(expression.replace(/x/g, `(${x})`));
-        } catch {
-          y = 0;
-        }
-
-        const graphX = width / 2 + x * 20;
-        const graphY = height / 2 - y * 20;
-
-        if (x === -10) ctx.moveTo(graphX, graphY);
-        else ctx.lineTo(graphX, graphY);
-      }
-      ctx.stroke();
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
